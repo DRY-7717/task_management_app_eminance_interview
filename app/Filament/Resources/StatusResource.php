@@ -88,6 +88,13 @@ class StatusResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
+                        ->after(callback: function ($records) {
+                            Status::orderBy('sort_order')->get()
+                                ->each(function ($status, $index) {
+                                    $status->sort_order = $index + 1;
+                                    $status->save();
+                                });
+                        })
                         ->successNotification(
                             Notification::make()
                                 ->success()
