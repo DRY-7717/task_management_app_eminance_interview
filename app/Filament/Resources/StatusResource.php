@@ -12,6 +12,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -43,11 +46,27 @@ class StatusResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Name')
+                    ->searchable(),
+                TextColumn::make('is_active')
+                    ->badge()
+                    ->color(fn(bool $state) => $state ? 'success' : 'warning')
+                    ->formatStateUsing(fn(bool $state) => $state ? 'Active' : 'Inactive')
+                    ->searchable(),
+                TextColumn::make('sort_order')
+                    ->label('Order'),
+
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('is_active')
+                    ->label('Status')
+                    ->options([
+                        1 => 'Active',
+                        0 => 'Inactive',
+                    ]),
+            ], FiltersLayout::AboveContent)
+
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -58,7 +77,8 @@ class StatusResource extends Resource
             ])
             ->emptyStateIcon('heroicon-o-tag')
             ->emptyStateHeading("No statuses yet")
-            ->emptyStateDescription('Once you write your first post, it will appear here.');
+            ->emptyStateDescription('Once you write your first post, it will appear here.')
+            ->reorderable('sort_order');
     }
 
     public static function getRelations(): array
