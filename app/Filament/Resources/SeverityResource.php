@@ -77,6 +77,7 @@ class SeverityResource extends Resource
             ->emptyStateIcon('heroicon-o-chart-bar')
             ->emptyStateHeading("No severities yet")
             ->emptyStateDescription('Once you write your first severity, it will appear here.')
+            ->defaultSort('sort_order', 'asc')
             ->reorderable('sort_order');
     }
 
