@@ -33,6 +33,7 @@ class StatusResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label('Status Name')
+                    ->unique('statuses', 'name', ignoreRecord: true)
                     ->required(),
                 TextInput::make('sort_order')
                     ->label('Order')
@@ -71,6 +72,10 @@ class StatusResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->after(function (Status $record) {
+                        Status::where('sort_order', '>', $record->sort_order)
+                            ->decrement('sort_order');
+                    })
                     ->successNotification(
                         Notification::make()
                             ->success()
