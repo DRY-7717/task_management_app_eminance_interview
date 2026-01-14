@@ -33,6 +33,7 @@ class StatusResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label('Status Name')
+                    ->placeholder('Input status name')
                     ->unique('statuses', 'name', ignoreRecord: true)
                     ->required(),
                 TextInput::make('sort_order')

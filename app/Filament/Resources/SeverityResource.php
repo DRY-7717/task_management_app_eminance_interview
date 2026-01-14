@@ -6,6 +6,8 @@ use App\Filament\Resources\SeverityResource\Pages;
 use App\Filament\Resources\SeverityResource\RelationManagers;
 use App\Models\Severity;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -24,7 +26,20 @@ class SeverityResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->label('Severity Name')
+                    ->placeholder('Input severity name')
+                    ->unique('severities', 'name', ignoreRecord: true)
+                    ->required(),
+                TextInput::make('color')
+                    ->label('Color')
+                    ->placeholder('input the hexadecimal color. Ex: #ffffff')
+                    ->nullable(),
+                TextInput::make('sort_order')
+                    ->label('Order')
+                    ->readOnly()
+                    ->default(fn() => (Severity::max('sort_order') ?? 0) + 1),
+                
             ]);
     }
 

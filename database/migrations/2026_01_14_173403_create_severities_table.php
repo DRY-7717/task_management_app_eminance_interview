@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('severities', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 60);
+            $table->string('name', 60)->unique();
             $table->string('color')->nullable();
             $table->integer('sort_order');
             $table->timestamps();
