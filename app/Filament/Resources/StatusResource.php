@@ -5,7 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StatusResource\Pages;
 use App\Filament\Resources\StatusResource\RelationManagers;
 use App\Models\Status;
+use Dom\Text;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -24,7 +27,15 @@ class StatusResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')
+                    ->label('Status Name')
+                    ->required(),
+                TextInput::make('sort_order')
+                    ->label('Order')
+                    ->readOnly()
+                    ->default(fn() => (Status::max('sort_order') ?? 0) + 1),
+                Toggle::make('is_active')
+                    ->label('Active')
             ]);
     }
 
