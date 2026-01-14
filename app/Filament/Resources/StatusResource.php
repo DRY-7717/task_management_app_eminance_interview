@@ -97,7 +97,7 @@ class StatusResource extends Resource
             ])
             ->emptyStateIcon('heroicon-o-tag')
             ->emptyStateHeading("No statuses yet")
-            ->emptyStateDescription('Once you write your first post, it will appear here.')
+            ->emptyStateDescription('Once you write your first status, it will appear here.')
             ->reorderable('sort_order');
     }
 
