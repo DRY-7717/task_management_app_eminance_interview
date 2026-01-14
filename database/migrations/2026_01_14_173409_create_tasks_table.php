@@ -16,13 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('title', 180);
             $table->text('description');
-            $table->foreignId('status_id')->constrained('statuses');
-            $table->foreignId('severity_id')->constrained('severities');
-            $table->foreignId('developer_id')->constrained('users');
+            $table->foreignId('status_id')->constrained('statuses')->restrictOnDelete();
+            $table->foreignId('severity_id')->constrained('severities')->restrictOnDelete();
+            $table->foreignId('developer_id')->constrained('users')->restrictOnDelete();
             $table->date('start_date');
             $table->date('due_date');
             $table->date('finish_date')->nullable();
-            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
 
             $table->timestamps();
         });

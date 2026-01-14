@@ -10,7 +10,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -39,7 +41,7 @@ class SeverityResource extends Resource
                     ->label('Order')
                     ->readOnly()
                     ->default(fn() => (Severity::max('sort_order') ?? 0) + 1),
-                
+
             ]);
     }
 
@@ -47,7 +49,19 @@ class SeverityResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Name')
+                    ->searchable(),
+                TextColumn::make('color')
+                    ->label('Color')
+                    ->placeholder('-')
+                    ->badge()
+                    ->color(function ($record) {
+                        return Color::hex($record->color);
+                    })
+                    ->searchable(),
+                TextColumn::make('sort_order')
+                    ->label('Order')
             ])
             ->filters([
                 //
@@ -62,7 +76,8 @@ class SeverityResource extends Resource
             ])
             ->emptyStateIcon('heroicon-o-chart-bar')
             ->emptyStateHeading("No severities yet")
-            ->emptyStateDescription('Once you write your first severity, it will appear here.');
+            ->emptyStateDescription('Once you write your first severity, it will appear here.')
+            ->reorderable('sort_order');
     }
 
     public static function getRelations(): array
