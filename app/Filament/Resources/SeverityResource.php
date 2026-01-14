@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
@@ -68,10 +69,34 @@ class SeverityResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function (Severity $record) {
+                        Severity::where('sort_order', '>', $record->sort_order)
+                            ->decrement('sort_order');
+                    })
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Severity deleted')
+                            ->body('Severity deleted successfully.')
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->after(callback: function ($records) {
+                            Severity::orderBy('sort_order')->get()
+                                ->each(function ($status, $index) {
+                                    $status->sort_order = $index + 1;
+                                    $status->save();
+                                });
+                        })
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->title('Severity deleted')
+                                ->body('Severity deleted successfully.')
+                        ),
                 ]),
             ])
             ->emptyStateIcon('heroicon-o-chart-bar')
