@@ -1,0 +1,75 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: task_management_interview
+    container_name: app_task_management_interview
+    restart: unless-stopped
+    tty: true
+    environment:
+      - DB_HOST=db
+      - DB_PORT=db:3312
+      - DB_DATABASE=db_task_management_interview
+      - DB_USERNAME=dry7717
+      - DB_PASSWORD=bimaarya123
+    working_dir: /var/www/task_management_interview
+    volumes:
+      - .:/var/www/task_management_interview
+      - ./storage/php.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - task_management_interview_network
+    ports:
+      - "5173:5173"
+    depends_on:
+      - db
+
+  webserver:
+    image: nginx:alpine
+    container_name: nginx_task_management_interview
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/task_management_interview
+      - ./storage/:/etc/nginx/conf.d/
+    networks:
+      - task_management_interview_network
+    depends_on:
+      - app
+
+  db:
+    image: mariadb
+    container_name: mariadb_task_management_interview
+    environment:
+      - MYSQL_ROOT_PASSWORD=bimaarya123
+      - MYSQL_USER=dry7717
+      - MYSQL_PASSWORD=bimaarya123
+      - MYSQL_DATABASE=db_task_management_interview
+    ports:
+      - "3312:3306"
+    volumes:
+      - mariadb_task_management_interview_volume:/var/lib/mysql
+    networks:
+      - task_management_interview_network
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: pma_task_management_interview
+    restart: always
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=dry7717
+      - PMA_PASSWORD=bimaarya123
+      - PMA_PORT=db:3312
+    ports:
+      - 8888:80
+    networks:
+      - task_management_interview_network
+
+volumes:
+  mariadb_task_management_interview_volume:
+
+networks:
+  task_management_interview_network:
+    driver: bridge
