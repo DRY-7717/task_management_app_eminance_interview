@@ -74,7 +74,7 @@ class TasksResource extends Resource
                     ->afterStateUpdated(function ($state, Set $set) {;
                         $status =  Status::find($state);
 
-                        if ($status->name == 'Completed') {
+                        if ($status?->name == 'Completed') {
                             $set('finish_date', date('m/d/Y'));
                         } else {
                             $set('finish_date', null);
