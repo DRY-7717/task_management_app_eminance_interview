@@ -22,7 +22,7 @@ class TasksPolicy
      */
     public function view(User $user, Tasks $tasks): bool
     {
-        return $user->role == "admin" || $tasks->developer_id == $user->id;;
+        return $user->is_admin || $tasks->developer_id == $user->id;;
     }
 
     /**
@@ -30,7 +30,7 @@ class TasksPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role == "admin";
+        return $user->is_admin;
     }
 
     /**
@@ -39,7 +39,7 @@ class TasksPolicy
     public function update(User $user, Tasks $tasks): bool
     {
         //
-        return $user->role == "admin" || $tasks->developer_id == $user->id;
+        return $user->is_admin || $tasks->developer_id == $user->id;
     }
 
     /**
@@ -48,7 +48,7 @@ class TasksPolicy
     public function delete(User $user, Tasks $tasks): bool
     {
         //
-        return $user->role == "admin";
+        return $user->is_admin;
     }
 
     /**
@@ -57,7 +57,7 @@ class TasksPolicy
     public function restore(User $user, Tasks $tasks): bool
     {
         //
-        return $user->role == "admin";
+        return $user->is_admin;
     }
 
     /**
@@ -66,6 +66,6 @@ class TasksPolicy
     public function forceDelete(User $user, Tasks $tasks): bool
     {
         //
-        return $user->role == "admin";
+        return $user->is_admin;
     }
 }
