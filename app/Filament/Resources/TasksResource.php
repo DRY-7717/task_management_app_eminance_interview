@@ -71,6 +71,8 @@ class TasksResource extends Resource
 
                         if ($status->name == 'Completed') {
                             $set('finish_date', date('m/d/Y'));
+                        } else {
+                            $set('finish_date', null);
                         }
                     })
                     ->required(),
