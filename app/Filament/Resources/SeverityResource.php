@@ -33,6 +33,7 @@ class SeverityResource extends Resource
                     ->label('Severity Name')
                     ->placeholder('Input severity name')
                     ->unique('severities', 'name', ignoreRecord: true)
+                    ->dehydrateStateUsing(fn(string $state): string => ucwords($state))
                     ->required(),
                 TextInput::make('color')
                     ->label('Color')

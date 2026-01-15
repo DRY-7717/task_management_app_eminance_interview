@@ -35,6 +35,7 @@ class StatusResource extends Resource
                     ->label('Status Name')
                     ->placeholder('Input status name')
                     ->unique('statuses', 'name', ignoreRecord: true)
+                    ->dehydrateStateUsing(fn(string $state): string => ucwords($state))
                     ->required(),
                 TextInput::make('sort_order')
                     ->label('Order')
