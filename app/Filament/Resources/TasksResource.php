@@ -11,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
@@ -146,10 +147,23 @@ class TasksResource extends Resource
             ], FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Task deleted')
+                            ->body('Task deleted successfully.')
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->successNotification(
+                            Notification::make()
+                                ->success()
+                                ->title('Task deleted')
+                                ->body('Task deleted successfully.')
+                        ),
                 ]),
             ])
             ->emptyStateIcon('heroicon-o-clipboard-document-list')
@@ -162,6 +176,17 @@ class TasksResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()->role != 'admin') {
+            $query->where('developer_id', auth()->user()->id);
+        }
+
+        return $query;
     }
 
     public static function getPages(): array

@@ -6,8 +6,10 @@ namespace App\Providers;
 
 use App\Models\Severity;
 use App\Models\Status;
+use App\Models\Tasks;
 use App\Policies\SeverityPolicy;
 use App\Policies\StatusPolicy;
+use App\Policies\TasksPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -20,7 +22,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         //
         Status::class => StatusPolicy::class,
-        Severity::class => SeverityPolicy::class
+        Severity::class => SeverityPolicy::class,
+        Tasks::class => TasksPolicy::class
 
     ];
 
