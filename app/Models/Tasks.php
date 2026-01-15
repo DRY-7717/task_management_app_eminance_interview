@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tasks extends Model
 {
@@ -29,5 +30,9 @@ class Tasks extends Model
     public function createdby(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'task_id', 'id')->whereNull('parent_id')->with('user', 'replies');
     }
 }

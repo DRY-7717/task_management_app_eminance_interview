@@ -13,9 +13,14 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -242,6 +247,85 @@ class TasksResource extends Resource
         return $query;
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Detail task')
+                    ->columns([
+                        'sm' => 2,
+                    ])
+                    ->schema([
+                        TextEntry::make('title')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('status.name')
+                            ->weight(FontWeight::Bold)
+                            ->badge()
+                            ->color(fn(string $state): string => match ($state) {
+                                'Waiting' => 'gray',
+                                'In Progress' => 'warning',
+                                'Pending' => 'primary',
+                                'Completed' => 'success',
+                                'Closed' => 'danger',
+                            })
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('severity.name')
+                            ->weight(FontWeight::Bold)
+                            ->badge()
+                            ->color(function ($record) {
+
+                                $color = $record->severity?->color;
+                                if (empty($color)) {
+                                    return 'primary';
+                                }
+                                return Color::hex($color);
+                            })
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('user.name')
+                            ->label('Assignee')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('start_date')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('due_date')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('finish_date')
+                            ->placeholder("-")
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('createdby.name')
+                            ->label('Created By')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 1
+                            ]),
+                        TextEntry::make('description')
+                            ->weight(FontWeight::Bold)
+                            ->columnSpan([
+                                'xl' => 2
+                            ]),
+                    ]),
+
+
+            ]);
+    }
     public static function getPages(): array
     {
         return [
