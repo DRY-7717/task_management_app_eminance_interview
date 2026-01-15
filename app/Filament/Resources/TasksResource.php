@@ -12,7 +12,11 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -68,7 +72,7 @@ class TasksResource extends Resource
                 Select::make('created_by')
                     ->label('Created By')
                     ->relationship(
-                        'user',
+                        'createdby',
                         'name',
                         fn(Builder $query) => $query->where('role', 'admin')
                     )
@@ -88,11 +92,58 @@ class TasksResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make(name: 'title')
+                    ->label('Title')
+                    ->searchable(),
+                TextColumn::make(name: 'status.name')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'Waiting' => 'gray',
+                        'In Progress' => 'warning',
+                        'Pending' => 'primary',
+                        'Completed' => 'success',
+                        'Closed' => 'danger',
+                    })
+                    ->searchable(),
+                TextColumn::make(name: 'severity.name')
+                    ->label('Severity')
+                    ->badge()
+                    ->color(function ($record) {
+                        return Color::hex($record->severity->color);
+                    })
+                    ->searchable(),
+                TextColumn::make(name: 'user.name')
+                    ->label('Assignee')
+                    ->searchable(),
+                TextColumn::make(name: 'start_date')
+                    ->label('Start date')
+                    ->searchable(),
+                TextColumn::make(name: 'due_date')
+                    ->label('Due date')
+                    ->searchable(),
+                TextColumn::make(name: 'finish_date')
+                    ->label('Finis date')
+                    ->placeholder('-')
+                    ->searchable(),
+                TextColumn::make(name: 'createdby.name')
+                    ->label('Created By')
+                    ->searchable(),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->relationship('status', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple(),
+                SelectFilter::make('severity')
+                    ->label('Severity')
+                    ->relationship('severity', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+            ], FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

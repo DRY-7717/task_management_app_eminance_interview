@@ -26,4 +26,8 @@ class Tasks extends Model
     {
         return $this->belongsTo(Severity::class, 'severity_id', 'id');
     }
+    public function createdby(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
 }
