@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Status extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
+
+
+
+    public function task(): HasMany
+    {
+        return $this->hasMany(Tasks::class, 'status_id', 'id');
+    }
 }
