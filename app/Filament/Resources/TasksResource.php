@@ -6,6 +6,10 @@ use App\Filament\Resources\TasksResource\Pages;
 use App\Filament\Resources\TasksResource\RelationManagers;
 use App\Models\Tasks;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,7 +29,58 @@ class TasksResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('title')
+                    ->label('Title')
+                    ->placeholder('Input task title')
+                    ->required(),
+                Select::make('status_id')
+                    ->label('Status')
+                    ->relationship(
+                        'status',
+                        'name',
+                        fn(Builder $query) => $query->where('is_active', 1),
+                    )
+                    ->required(),
+                Select::make('severity_id')
+                    ->label('Severity')
+                    ->relationship(
+                        'severity',
+                        'name',
+                    )
+                    ->required(),
+                Select::make('developer_id')
+                    ->label('Developer')
+                    ->relationship(
+                        'user',
+                        'name',
+                        fn(Builder $query) => $query->where('role', 'developer')
+                    )
+                    ->required(),
+                DatePicker::make('start_date')
+                    ->label('Start date')
+                    ->required(),
+                DatePicker::make('due_date')
+                    ->label(label: 'Due date')
+                    ->required(),
+                DatePicker::make('finish_date')
+                    ->label('Finish date')
+                    ->nullable(),
+                Select::make('created_by')
+                    ->label('Created By')
+                    ->relationship(
+                        'user',
+                        'name',
+                        fn(Builder $query) => $query->where('role', 'admin')
+                    )
+                    ->required(),
+                Textarea::make(name: 'description')
+                    ->label('Description')
+                    ->required()
+                    ->columnSpan([
+                        'default' => 2
+                    ]),
+
+
             ]);
     }
 
