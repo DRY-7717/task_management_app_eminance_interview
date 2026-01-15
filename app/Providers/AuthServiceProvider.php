@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\Severity;
+use App\Models\Status;
+use App\Policies\SeverityPolicy;
+use App\Policies\StatusPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,6 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
+        Status::class => StatusPolicy::class,
+        Severity::class => SeverityPolicy::class
+
     ];
 
     /**
