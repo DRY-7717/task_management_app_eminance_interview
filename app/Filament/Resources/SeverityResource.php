@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SeverityResource\Pages;
 use App\Filament\Resources\SeverityResource\RelationManagers;
 use App\Models\Severity;
+
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -13,6 +14,8 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -71,6 +74,16 @@ class SeverityResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->before(function (DeleteAction $action, Severity $record) {
+                        if ($record->task()->exists()) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Cannot delete severity')
+                                ->body('Some tasks are still using this severity.')
+                                ->send();
+                            $action->halt();
+                        }
+                    })
                     ->after(function (Severity $record) {
                         Severity::where('sort_order', '>', $record->sort_order)
                             ->decrement('sort_order');
@@ -85,6 +98,18 @@ class SeverityResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (DeleteBulkAction $action, $records) {
+                            foreach ($records as $record) {
+                                if ($record->task()->exists()) {
+                                    Notification::make()
+                                        ->danger()
+                                        ->title('Cannot delete severity')
+                                        ->body('Some tasks are still using this severity.')
+                                        ->send();
+                                    $action->halt();
+                                }
+                            }
+                        })
                         ->after(callback: function ($records) {
                             Severity::orderBy('sort_order')->get()
                                 ->each(function ($status, $index) {

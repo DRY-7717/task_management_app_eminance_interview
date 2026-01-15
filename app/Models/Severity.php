@@ -15,6 +15,6 @@ class Severity extends Model
 
     public function task(): HasMany
     {
-        return $this->hasMany(Tasks::class, 'status_id', 'id');
+        return $this->hasMany(Tasks::class, 'severity_id', 'id');
     }
 }

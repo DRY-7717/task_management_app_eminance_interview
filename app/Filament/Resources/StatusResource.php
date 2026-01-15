@@ -6,6 +6,8 @@ use App\Filament\Resources\StatusResource\Pages;
 use App\Filament\Resources\StatusResource\RelationManagers;
 use App\Models\Status;
 use Dom\Text;
+use Filament\Tables\Actions\DeleteAction;
+
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -13,6 +15,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
@@ -74,6 +77,16 @@ class StatusResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->before(function (DeleteAction $action, Status $record) {
+                        if ($record->task()->exists()) {
+                            Notification::make()
+                                ->danger()
+                                ->title('Cannot delete status')
+                                ->body('Some tasks are still using this status.')
+                                ->send();
+                            $action->halt();
+                        }
+                    })
                     ->after(function (Status $record) {
                         Status::where('sort_order', '>', $record->sort_order)
                             ->decrement('sort_order');
@@ -89,6 +102,18 @@ class StatusResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (DeleteBulkAction $action, $records) {
+                            foreach ($records as $record) {
+                                if ($record->task()->exists()) {
+                                    Notification::make()
+                                        ->danger()
+                                        ->title('Cannot delete status')
+                                        ->body('Some tasks are still using this status.')
+                                        ->send();
+                                    $action->halt();
+                                }
+                            }
+                        })
                         ->after(callback: function ($records) {
                             Status::orderBy('sort_order')->get()
                                 ->each(function ($status, $index) {
