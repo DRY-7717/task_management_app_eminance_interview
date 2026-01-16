@@ -1,66 +1,188 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🧩 Task Management Application
 
-## About Laravel
+A simple task management application built using Laravel 10, PHP 8.3.29, and Filament v3.
+This project was created as part of a technical assessment to demonstrate backend development, role-based authorization, and admin panel implementation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP: 8.3
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel: 10.x
 
-## Learning Laravel
+- Filament: v3.x
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Database: MySQL
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Authentication: Filament Authentication
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Email: Mailtrap (for email testing)
 
-## Laravel Sponsors
+## ✨ Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Authentication & Roles
 
-### Premium Partners
+- Admin and Developer roles
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Default user accounts provided via seeder
 
-## Contributing
+### Task Management
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Admin can create, update, delete, and assign tasks to Developers
 
-## Code of Conduct
+- Developers can only view tasks assigned to them
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Task status transitions are restricted based on user roles
 
-## Security Vulnerabilities
+- When a Developer updates a task status to Completed, an email notification is sent to the Admin
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Statuses & Severities
 
-## License
+- Admin can manage task statuses and severities
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Drag-and-drop ordering using sort_order
+
+- Safe deletion handling when referenced by tasks
+
+- Active and inactive status support
+
+### Comments
+
+- Admin and the assigned Developer can post comments
+
+- Supports nested replies (one level)
+
+### Filtering & Search
+
+- Filter tasks by Status and Severity
+
+- Search functionality available on the task list
+
+### Notifications
+
+- Email notifications using Mailtrap when a task is in progress or completed by a Developer
+
+## 📂 Database Schema (Core Entities)
+
+- **users**: user accounts with roles
+
+- **tasks**: tasks with status, severity, and assignment
+
+- **statuses**: ordered task statuses with active/inactive state
+
+- **severities**: severity levels with optional colors
+
+- **comments**: comments with threaded replies
+
+## 🛠 Installation
+
+```bash
+  git clone https://github.com/DRY-7717/task_management_app_eminance_interview.git
+```
+
+```bash
+  cd task_management_app_eminance_interview
+```
+
+```bash
+  composer install
+```
+
+```bash
+  cp .env.example .env
+```
+
+```bash
+  php artisan key:generate
+```
+```bash
+  npm install
+```
+
+### Database Configuration
+update .env:
+
+```bash
+DB_HOST=your_db_host
+DB_PORT=your_db_port
+DB_DATABASE=your_db_name
+DB_USERNAME=username_db 
+DB_PASSWORD=password_db
+
+```
+Run migrations and seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+
+## ▶️ Running the Application (Local)
+
+**Start Laravel Development Server**
+
+```bash
+  php artisan serve
+```
+
+**Start Vite (Hot Reload)**
+In a separate terminal, run:
+
+```bash
+  npm run dev
+```
+
+## 🚀 Accessing the Admin Panel
+
+This project uses Filament Admin Panel.
+
+Open the following URL:
+
+```bash
+http://localhost:8000/admin
+
+```
+You will be redirected to the Filament login page.
+
+**Note**: The default "/" route still displays the Laravel welcome page.
+
+## 📧 Email Configuration (Mailtrap)
+This project uses Mailtrap for email testing in the local development environment.
+
+Add the following configuration to .env:
+
+```bash
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_username
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_TO=your_email_mailtrap
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+An email will be sent when a Developer updates a task status to **In Progress** or **Completed**.
+
+## 👤 Default Users (Seeder)
+
+| Role      | Email                                                 | Password |
+| --------- | ----------------------------------------------------- | -------- |
+| Admin     | [administrator@gmail.com](mailto:administrator@gmail.com)         | password |
+| Developer One | [developerone@gmail.com](mailto:developerone@gmail.com) | password |
+| Developer Two | [developertwo@gmail.com](mailto:developertwo@gmail.com) | password |
+
+
+## 🧪 Technical Notes
+
+- Authorization is handled using Laravel Policies
+
+- Filament v3 is used for admin panel and resource management
+
+- Status change rules are enforced at the page level
+
+- Email notifications are triggered after form submission
+
+## 📝 License
+This project is intended for learning and technical assessment purposes.
