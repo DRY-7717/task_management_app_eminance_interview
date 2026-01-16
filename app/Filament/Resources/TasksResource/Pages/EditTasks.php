@@ -39,7 +39,7 @@ class EditTasks extends EditRecord
 
     protected function afterSave(): void
     {
-        if (!auth()->user()->is_admin && $this->record->wasChanged('status_id') && $this->record->status?->name === 'Completed') {
+        if (!auth()->user()->is_admin && $this->record->wasChanged('status_id')) {
 
             Mail::to(env('MAIL_TO'))->send(
                 new TaskCompleted(
